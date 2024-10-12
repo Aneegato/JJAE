@@ -1,5 +1,10 @@
+
+body, h1, h2, p {
+  font-family: 'Your-Font-Name', sans-serif;
+}
+
 .dashboard-page {
-    background: linear-gradient(180deg, rgb(15, 30, 50), rgb(30, 45, 58), rgb(45, 65, 80));
+    background: linear-gradient(180deg, #001f3f, #003366, #005f99, #669FAC);
     color: #ffffff;  /* White text */
     padding: 20px;
     height: 100vh; 
@@ -12,7 +17,8 @@
   }
   
   .dashboard-container .dashboard-box {
-    background-color: rgb(50, 75, 90);  /* Slightly lighter blue to make containers stand out */
+    /*background-color: rgb(50, 75, 90); */ /* Slightly lighter blue to make containers stand out */
+    background-color: #073d5d; 
     padding: 15px;
     border-radius: 10px;
     border: 2px solid #ffffff;  /* White border */
