@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+# Welcome to ClearSail , proudly designed by team JJAE 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was made for PSA CodeSprint 2024, where the main focus was to provide a digital solution to enhance the efficiency and viability of intermodal logistics with Singapore as a central hub. 
+
+Our website 
 
 ## Available Scripts
 
