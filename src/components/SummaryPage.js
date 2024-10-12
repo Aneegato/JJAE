@@ -79,16 +79,25 @@ const SummaryPage = ({ transportType }) => {
             height: '100vh',  // Full viewport height
           }}
         >
-        
         </div>
 
-        {/* Right Section - Summary Data */}
+        {/* Right Section - Summary Data using DaisyUI stats */}
         <div className="right-section">
-          <h2>Results</h2>
-          <div className="activity-timeline">
-            <p><strong>ETA:</strong> 2 hours</p>
-            <p><strong>Distance:</strong> 150 km</p>
-            <p><strong>Cost:</strong> $500</p>
+          <div className="stats shadow">
+            <div className="stat">
+              <div className="stat-title">ETA</div>
+              <div className="stat-value">2 hours</div>
+            </div>
+
+            <div className="stat">
+              <div className="stat-title">Distance</div>
+              <div className="stat-value">150 km</div>
+            </div>
+
+            <div className="stat">
+              <div className="stat-title">Cost</div>
+              <div className="stat-value">$500</div>
+            </div>
           </div>
 
           {/* DaisyUI Button for Optimize Route */}

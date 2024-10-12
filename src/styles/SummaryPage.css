@@ -1,49 +1,66 @@
-/* SummaryPage.css */
-
 .summary-page {
-    padding: 0;  
-    margin: 0;   
-    background: linear-gradient(180deg, rgb(15, 30, 50), rgb(30, 45, 58), rgb(45, 65, 80), rgb(123, 146, 141), rgb(159, 192, 186));
-    height: 100vh;
-  }
-  
-  .summary-container {
-    display: flex;
-    height: 100vh;  
-  }
-  
-  .left-section {
-    flex: 1;
-    margin: 0; 
-    height: 100%;  
-  }
-  
-  .right-section {
-    flex: 1; 
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  
-  .activity-timeline {
-    background-color: #f4f4f4;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
-  
-  button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
+  padding: 0;
+  margin: 0;
+  background: linear-gradient(180deg, rgb(15, 30, 50), rgb(30, 45, 58), rgb(45, 65, 80), rgb(123, 146, 141), rgb(159, 192, 186));
+  height: 100vh;
+}
+
+.summary-container {
+  display: flex;
+  height: 100vh;
+}
+
+.left-section {
+  flex: 1;
+  margin: 0;
+  height: 100%;
+}
+
+.right-section {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px; /* Add gap between the stats and the buttons */
+}
+
+.stats {
+  margin-bottom: 20px; /* Add space below the stats component */
+}
+
+.results-grid {
+  display: flex;
+  flex-direction: column;  /* Stack items vertically */
+  gap: 20px;  /* Add space between each result box */
+  margin-bottom: 30px;
+}
+
+.info-box {
+  background: linear-gradient(90deg, #7ba292, #5d8cae);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #fff;
+  font-weight: bold;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Add space between buttons */
+  margin-top: 30px;  /* Add some space between results and buttons */
+}
+
+button {
+  padding: 15px 20px; /* Increase padding for more space inside the buttons */
+  margin-bottom: 10px; /* Add space between each button */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}

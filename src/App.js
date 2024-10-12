@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 // Lazy load components
 const HomePage = lazy(() => import('./components/HomePage'));
 const SummaryPage = lazy(() => import('./components/SummaryPage'));
-const MapBox = lazy(() => import('./components/MapBox'));
+const MapComponent = lazy(() => import('./components/MapComponent'));
 const DetailedReportPage = lazy(() => import('./components/DetailedReportPage'));  // Import DetailedReportPage
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/summary" element={<SummaryPage />} />
-            <Route path="/map" element={<MapBox />} />
+            <Route path="/map" element={<MapComponent />} />
             <Route path="/detailed-report" element={<DetailedReportPage />} /> {/* New route */}
           </Routes>
         </Suspense>
