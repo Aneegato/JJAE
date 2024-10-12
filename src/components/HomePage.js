@@ -3,19 +3,33 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/HomePage.css';  
 import background from '../assets/background.jpg';  
 import logo from '../assets/clear_sail_logo.png'; 
+import { generateRoute } from '../services/routeOptimization.js'
+
 
 const HomePage = () => {
   const [startDestination, setStartDestination] = useState('');
   const [endDestination, setEndDestination] = useState('');
   const [budget, setBudget] = useState('');
+  const [loading, setLoading] = useState(false);  
+  const [error, setError] = useState('');
   
-  const navigate = useNavigate();  // Initialize navigate function
+  const navigate = useNavigate();  
   
-  // Handle form submission (for example, on clicking the CALCULATE button)
-  const handleSubmit = () => {
-    // Here you could validate inputs or perform actions before navigation
-    console.log('Start:', startDestination, 'End:', endDestination, 'Budget:', budget);
-    navigate('/summary');  // Navigate to the SummaryPage route
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const routeData = await generateRoute(startDestination, endDestination);
+      console.log('Route Data:', routeData);
+
+      navigate('/summary', { state: { routeData } });
+    } catch (err) {
+      setError('Failed to generate the route.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   
@@ -58,7 +72,7 @@ const HomePage = () => {
 
         {/* Button to handle form submission and navigate */}
         <button className="calculate-button" onClick={handleSubmit}>
-          CALCULATE
+          {loading ? 'Calculating...' : 'CALCULATE'}
         </button>
       </div>
     </div>

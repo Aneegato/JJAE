@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
-import '../styles/SummaryPage.css';  // Import CSS file for styles
-import { generateRoute } from '../services/routeOptimization.js'
-// Import the transportation images
+import { useNavigate, useLocation } from 'react-router-dom'; 
+import '../styles/SummaryPage.css';  
 import airImage from '../assets/plane_transportation.jpeg';
 import shipImage from '../assets/boat.jpeg';
 import truckImage from '../assets/truck.jpeg';
 import trainImage from '../assets/train_transportation.jpeg';  
 
 const SummaryPage = ({ transportType }) => {
-  const navigate = useNavigate();  // Initialize the navigate function
-  const [loading, setLoading] = useState(false); 
+  const navigate = useNavigate();  
+  const { state } = useLocation();
+  const { routeData } = state || {};
   const [error, setError] = useState("");
-  const [routeData, setRouteData] = useState(null);
+
+  if (!routeData) {
+    return <div>No route data available. Please try again.</div>;
+  }
 
   const handleBackToHome = () => {
     navigate('/home');
@@ -26,25 +28,7 @@ const SummaryPage = ({ transportType }) => {
     navigate('/detailed-report');  // Navigate to the Detailed Report page
   };
 
-  const handleRouteOptimization = async () => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const start = "37.7749,-122.4194"; 
-      const end = "34.0522,-118.2437";   
-      const route = await generateRoute(start, end);
-
-      setRouteData(route);
-      console.log(route);
-    } catch (err) {
-      setError("Failed to generate the route.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  
   let backgroundImage;
   switch (transportType) {
     case 'air':
@@ -79,35 +63,17 @@ const SummaryPage = ({ transportType }) => {
             height: '100vh',  // Full viewport height
           }}
         >
+        
         </div>
 
-        {/* Right Section - Summary Data using DaisyUI stats */}
+        {/* Right Section - Summary Data */}
         <div className="right-section">
-          <div className="stats shadow">
-            <div className="stat">
-              <div className="stat-title">ETA</div>
-              <div className="stat-value">2 hours</div>
-            </div>
-
-            <div className="stat">
-              <div className="stat-title">Distance</div>
-              <div className="stat-value">150 km</div>
-            </div>
-
-            <div className="stat">
-              <div className="stat-title">Cost</div>
-              <div className="stat-value">$500</div>
-            </div>
+          <h2>Results</h2>
+          <div className="activity-timeline">
+            <p><strong>ETA:</strong> 2 hours</p>
+            <p><strong>Distance:</strong> 150 km</p>
+            <p><strong>Cost:</strong> $500</p>
           </div>
-
-          {/* DaisyUI Button for Optimize Route */}
-          <button 
-            className="btn"
-            onClick={handleRouteOptimization}
-            style={{ backgroundColor: "#13b63a", color: "#fff" }}
-          >
-            {loading ? 'Loading...' : 'Optimize Route'}
-          </button>
 
           {/* Error message */}
           {error && <p style={{ color: 'red' }}>{error}</p>}
