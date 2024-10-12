@@ -1,51 +1,92 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; 
 import '../styles/SummaryPage.css';  
 import airImage from '../assets/plane_transportation.jpeg';
 import shipImage from '../assets/boat.jpeg';
 import truckImage from '../assets/truck.jpeg';
 import trainImage from '../assets/train_transportation.jpeg';  
+import axios from 'axios';
 
-const SummaryPage = ({ transportType }) => {
+const SummaryPage = () => {
   const navigate = useNavigate();  
   const { state } = useLocation();
   const { routeData } = state || {};
   const [error, setError] = useState("");
+  const [weatherData, setWeatherData] = useState([]);
 
-  if (!routeData) {
-    return <div>No route data available. Please try again.</div>;
-  }
+  const API_KEY = '1dea9f37a3186ff0ea73530b24410323';
+
+  const sampleRouteData = {
+    route_summary: {
+      total_distance_km: 150,
+      estimated_duration_hours: 2,
+      total_cost_usd: 500,
+    },
+    legs: [
+      {
+        leg_number: 1,
+        start_coordinates: {
+          latitude: 37.7749,
+          longitude: -122.4194,
+        },
+        end_coordinates: {
+          latitude: 34.0522,
+          longitude: -118.2437,
+        },
+        transport_mode: "truck",
+        distance_km: 150,
+        duration_hours: 2,
+        cost_usd: 500,
+      }
+    ]
+  };
+
+  // Use real route data if available, otherwise use the sample data
+  //const routeData = sampleRouteData;
+  
+
 
   const handleBackToHome = () => {
     navigate('/home');
   };
 
-  const handleViewFullMap = () => {
-    navigate('/map');
+  const handleViewFullMap = async () => {
+    try {
+      // Send routeData to Python backend for processing
+      const response = await axios.post('http://localhost:5000/process-route-data', routeData);
+      const processedRouteData = response.data;
+  
+      // Navigate to the Map page and pass in processedRouteData 
+      navigate('/map', { state: { routeData: processedRouteData } });
+    } catch (err) {
+      setError("Failed to process route data for the map.");
+      console.error("Error processing route data:", err);
+    }
   };
+  
 
   const handleViewMoreStatistics = () => {
     navigate('/detailed-report');  // Navigate to the Detailed Report page
   };
 
   
-  let backgroundImage;
-  switch (transportType) {
-    case 'air':
-      backgroundImage = airImage;
-      break;
-    case 'ship':
-      backgroundImage = shipImage;
-      break;
-    case 'truck':
-      backgroundImage = truckImage;
-      break;
-    case 'train':
-      backgroundImage = trainImage;
-      break;
-    default:
-      backgroundImage = shipImage; // If no transportType is provided
-  }
+  let backgroundImage = shipImage
+  // switch (transportType) {
+  //   case 'air':
+  //     backgroundImage = airImage;
+  //     break;
+  //   case 'ship':
+  //     backgroundImage = shipImage;
+  //     break;
+  //   case 'truck':
+  //     backgroundImage = truckImage;
+  //     break;
+  //   case 'train':
+  //     backgroundImage = trainImage;
+  //     break;
+  //   default:
+  //     backgroundImage = shipImage; // If no transportType is provided
+  // }
 
   return (
     <div className="summary-page">

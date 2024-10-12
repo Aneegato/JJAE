@@ -2,6 +2,53 @@ import axios from "axios";
 
 const BASE_URL = 'http://localhost:3001/api';
 
+function extractJSONFromResponse(responseText) {
+  // Ensure responseText is a string
+  const response = typeof responseText === "string" ? responseText : JSON.stringify(responseText);
+  
+  // Log the response for debugging purposes
+  console.log("Raw response from OpenAI:", response);
+
+  // Enhanced regex to capture JSON within braces
+  const jsonMatch = response.match(/({[\s\S]*})/);
+
+  if (jsonMatch) {
+    try {
+      console.log("Extracted JSON string:", jsonMatch[0]);
+
+      // First, unescape the JSON string
+      const unescapedJsonString = jsonMatch[0].replace(/\\n/g, '').replace(/\\"/g, '"');
+
+      // Parse the JSON string
+      const parsedJson = JSON.parse(unescapedJsonString);
+      
+      // Transform JSON keys to match object literal format (if needed)
+      return transformToLiteral(parsedJson);
+    } catch (jsonError) {
+      console.error("Failed to parse JSON:", jsonError);
+      console.error("JSON that failed to parse:", jsonMatch[0]);
+      throw new Error("Failed to parse extracted JSON from response.");
+    }
+  } else {
+    console.error("Failed to extract JSON from the response. Response text:", response);
+    throw new Error("Failed to extract JSON from the response.");
+  }
+}
+
+
+// Function to transform JSON to JavaScript Object Literal style
+function transformToLiteral(json) {
+  if (Array.isArray(json)) {
+    return json.map(transformToLiteral);
+  } else if (json !== null && typeof json === 'object') {
+    return Object.keys(json).reduce((acc, key) => {
+      acc[key] = transformToLiteral(json[key]);
+      return acc;
+    }, {});
+  }
+  return json;
+}
+
 export async function generateRoute(start, end) {
   console.log("reached generateRoute");
   try {
@@ -56,8 +103,9 @@ export async function generateRoute(start, end) {
     `;
 
     const response = await axios.post(`${BASE_URL}/generate-route`, { prompt });
-    const optimizedRoute = response.data.route;
-    return optimizedRoute; 
+    console.log("Full response from API:", response.data);
+    const optimizedRoute = extractJSONFromResponse(response.data.route);
+    return optimizedRoute;
 
   } catch (error) {
     console.error("Error generating routes:", error);

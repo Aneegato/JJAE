@@ -1,5 +1,5 @@
 import './App.css';
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // Lazy load components
@@ -9,6 +9,14 @@ const MapComponent = lazy(() => import('./components/MapComponent'));
 const DetailedReportPage = lazy(() => import('./components/DetailedReportPage'));  // Import DetailedReportPage
 
 function App() {
+  // State to store routeData
+  const [routeData, setRouteData] = useState(null);
+
+  // Callback function to update routeData
+  const handleRouteDataUpdate = (data) => {
+    setRouteData(data);
+  };
+
   return (
     <Router>
       <div className="App">
@@ -18,7 +26,7 @@ function App() {
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/summary" element={<SummaryPage />} />
-            <Route path="/map" element={<MapComponent />} />
+            <Route path="/map" element={<MapComponent routeData={routeData} />} />
             <Route path="/detailed-report" element={<DetailedReportPage />} /> {/* New route */}
           </Routes>
         </Suspense>

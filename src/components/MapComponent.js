@@ -1,12 +1,18 @@
 // src/components/MapComponent.js
-
 import React, { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import '../styles/Map.css';
 
-const MapComponent = ({ routeData }) => {
+const MapComponent = () => {
+  const { state } = useLocation();
+  const { routeData } = state || {};
   const mapContainer = useRef(null);
 
   useEffect(() => {
+    if (!routeData) {
+      return; // If no routeData is available, do nothing
+    }
+
     // Load Google Maps Script with the environment variable key
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&v=beta&callback=initMap`;
@@ -15,100 +21,66 @@ const MapComponent = ({ routeData }) => {
     document.body.appendChild(script);
 
     script.onload = () => {
-      // Define the initMap function for initializing Google Maps
       window.initMap = () => {
         const mapOptions = {
-          center: { lat: 1.290270, lng: 103.851959 }, // Singapore coordinates
+          center: { lat: routeData[0].coordinates[0].lat, lng: routeData[0].coordinates[0].lng },
           zoom: 10,
-          heading: 90,  // Direction of view (e.g., East)
-          tilt: 45,     // Tilt for 3D effect
-          mapTypeId: 'hybrid', // Optional: 'terrain', 'satellite', or 'hybrid' for better 3D effect
+          heading: 90,
+          tilt: 45,
+          mapTypeId: 'hybrid',
         };
 
         const map = new window.google.maps.Map(mapContainer.current, mapOptions);
 
-        // Optionally adjust the heading and tilt after initialization
-        map.setTilt(60);
-        map.setHeading(90);
-
-        // Define permanent colors for each mode of transport
         const transportColors = {
-          truck: '#00FF00',   // Green
-          plane: '#FF0000',   // Red
-          ship: '#0000FF',    // Blue
-          train: '#FFFF00'    // Yellow
+          truck: '#00FF00', //green
+          plane: '#FF0000', //red
+          ship: '#0000FF', //blue
+          train: '#FFFF00', //yellow
         };
 
-        // Loop through routeData to draw polylines and add markers
-        if (routeData && routeData.length > 0) {
-          routeData.forEach((segment, index) => {
-            const color = transportColors[segment.mode] || '#FF0000'; // Default to red if mode is unknown
-
-            // Create the polyline for each segment
-            const polyline = new window.google.maps.Polyline({
-              path: segment.coordinates,
-              geodesic: true,
-              strokeColor: color,
-              strokeOpacity: 1.0,
-              strokeWeight: 4,
-              icons: [
-                {
-                  icon: {
-                    path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                  },
-                  offset: '100%',
-                  repeat: '50px',
+        routeData.forEach((segment) => {
+          const color = transportColors[segment.mode] || '#FF0000';
+          const polyline = new window.google.maps.Polyline({
+            path: segment.coordinates,
+            geodesic: true,
+            strokeColor: color,
+            strokeOpacity: 1.0,
+            strokeWeight: 4,
+            icons: [
+              {
+                icon: {
+                  path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
                 },
-              ],
-            });
-            polyline.setMap(map);
-
-            // Add markers for start and end of each polyline segment
-            const startMarker = new window.google.maps.Marker({
-              position: segment.coordinates[0],
-              map: map,
-              title: `Start of ${segment.mode} route`,
-              icon: {
-                path: window.google.maps.SymbolPath.CIRCLE,
-                fillColor: color,
-                fillOpacity: 1,
-                strokeWeight: 1,
-                scale: 6,
-              }
-            });
-
-            const endMarker = new window.google.maps.Marker({
-              position: segment.coordinates[segment.coordinates.length - 1],
-              map: map,
-              title: `End of ${segment.mode} route`,
-              icon: {
-                path: window.google.maps.SymbolPath.CIRCLE,
-                fillColor: color,
-                fillOpacity: 1,
-                strokeWeight: 1,
-                scale: 6,
-              }
-            });
-
-            // Optionally, add additional markers if there are multiple waypoints
-            if (segment.coordinates.length > 2) {
-              for (let i = 1; i < segment.coordinates.length - 1; i++) {
-                new window.google.maps.Marker({
-                  position: segment.coordinates[i],
-                  map: map,
-                  title: `Waypoint on ${segment.mode} route`,
-                  icon: {
-                    path: window.google.maps.SymbolPath.CIRCLE,
-                    fillColor: color,
-                    fillOpacity: 0.8,
-                    strokeWeight: 1,
-                    scale: 4,
-                  }
-                });
-              }
-            }
+                offset: '100%',
+                repeat: '100px',
+              },
+            ]
           });
-        }
+          polyline.setMap(map);
+        });
+
+        //legend of the colours
+        const legend = document.createElement('div');
+        legend.id = 'legend';
+        legend.innerHTML = `
+          <h3 style="font-weight: bold; font-size: 20px;">Legend</h3>
+          <p><span class="legend-color" style="color: #0000FF; font-weight: bold;">Blue</span> - Ship</p>
+          <p><span class="legend-color" style="color: #FF0000; font-weight: bold;">Red</span> - Plane</p>
+          <p><span class="legend-color" style="color: #00FF00; font-weight: bold;">Green</span> - Truck</p>
+          <p><span class="legend-color" style="color: #FFFF00; font-weight: bold;">Yellow</span> - Train</p>
+        `;
+        legend.style.backgroundColor = 'white';
+        legend.style.padding = '20px';
+        legend.style.margin = '12px';
+        legend.style.fontFamily = 'Arial, sans-serif';
+        legend.style.fontSize = '14px';
+        legend.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
+        legend.style.borderRadius = '5px';
+        legend.style.width = '200px'; // Increase the width of the legend container
+
+        // Add the legend to the map
+        map.controls[window.google.maps.ControlPosition.RIGHT_TOP].push(legend);
       };
     };
 
