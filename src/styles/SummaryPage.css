@@ -1,0 +1,49 @@
+/* SummaryPage.css */
+
+.summary-page {
+    padding: 0;  
+    margin: 0;   
+    background: linear-gradient(180deg, rgb(15, 30, 50), rgb(30, 45, 58), rgb(45, 65, 80), rgb(123, 146, 141), rgb(159, 192, 186));
+    height: 100vh;
+  }
+  
+  .summary-container {
+    display: flex;
+    height: 100vh;  
+  }
+  
+  .left-section {
+    flex: 1;
+    margin: 0; 
+    height: 100%;  
+  }
+  
+  .right-section {
+    flex: 1; 
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .activity-timeline {
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  

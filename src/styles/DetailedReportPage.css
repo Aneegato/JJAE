@@ -1,0 +1,86 @@
+.dashboard-page {
+    background: linear-gradient(180deg, rgb(15, 30, 50), rgb(30, 45, 58), rgb(45, 65, 80));
+    color: #ffffff;  /* White text */
+    padding: 20px;
+    height: 100vh; 
+  }
+  
+  .dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);  /* 3 columns for the top section */
+    gap: 20px;
+  }
+  
+  .dashboard-container .dashboard-box {
+    background-color: rgb(50, 75, 90);  /* Slightly lighter blue to make containers stand out */
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #ffffff;  /* White border */
+    box-shadow: 0px 0px 10px 5px rgba(0, 51, 102, 0.6);  /* Blue glow shadow effect */
+  }
+  
+  .dashboard-box h2 {
+    color: #ffffff;  /* White text for headings */
+  }
+  
+  .chart-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .chart {
+    flex: 1;
+    margin: 0 10px;
+    height: 300px;
+    border-radius: 10px;  /* Add rounded corners to the chart as well */
+    border: 2px solid #ffffff;  /* White border around the charts */
+    box-shadow: 0px 0px 10px 5px rgba(0, 51, 102, 0.6);  /* Blue glow effect */
+  }
+  
+  .sidebar-outer {
+    background-color: transparent;  
+    border: 5px solid rgba(0, 51, 102, 0.8);  
+    border-radius: 20px;  
+    padding: 5px;  
+  }
+  
+  .sidebar {
+    background-color: rgb(50, 75, 90);  
+    border: 2px solid #ffffff;  /* White inner border */
+    border-radius: 15px; 
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 60px;
+    height: auto;
+  }
+  
+
+  .sidebar-icon {
+    margin: 20px 0;
+  }
+  
+
+  .sidebar-icon img {
+    width: 40px; 
+    height: auto;
+  }
+  
+  button {
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  
