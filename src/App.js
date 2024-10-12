@@ -6,11 +6,12 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 const HomePage = lazy(() => import('./components/HomePage'));
 const SummaryPage = lazy(() => import('./components/SummaryPage'));
 const MapComponent = lazy(() => import('./components/MapComponent'));
-const DetailedReportPage = lazy(() => import('./components/DetailedReportPage'));  // Import DetailedReportPage
+const DetailedReportPage = lazy(() => import('./components/DetailedReportPage'));
 
 function App() {
-  // State to store routeData
+  // State to store routeData and weatherData
   const [routeData, setRouteData] = useState(null);
+  const [weatherData, setWeatherData] = useState([]);
 
   // Callback function to update routeData
   const handleRouteDataUpdate = (data) => {
@@ -24,10 +25,22 @@ function App() {
           <Routes>
             {/* Define your routes */}
             <Route path="/" element={<Navigate to="/home" />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/summary" element={<SummaryPage />} />
-            <Route path="/map" element={<MapComponent routeData={routeData} />} />
-            <Route path="/detailed-report" element={<DetailedReportPage />} /> {/* New route */}
+            <Route path="/home" element={<HomePage setRouteData={handleRouteDataUpdate} />} />
+            
+            {/* Pass routeData and setWeatherData to SummaryPage */}
+            <Route path="/summary" element={
+              <SummaryPage routeData={routeData} setWeatherData={setWeatherData} />
+            } />
+            
+            {/* Pass routeData and weatherData to MapComponent */}
+            <Route path="/map" element={
+              <MapComponent routeData={routeData} weatherData={weatherData} />
+            } />
+            
+            {/* Pass routeData and weatherData to DetailedReportPage */}
+            <Route path="/detailed-report" element={
+              <DetailedReportPage routeData={routeData} weatherData={weatherData} />
+            } />
           </Routes>
         </Suspense>
       </div>

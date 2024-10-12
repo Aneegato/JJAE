@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; 
 import '../styles/SummaryPage.css';  
 import airImage from '../assets/plane_transportation.jpeg';
@@ -14,7 +14,7 @@ const SummaryPage = () => {
   const [error, setError] = useState("");
   const [weatherData, setWeatherData] = useState([]);
 
-  const API_KEY = '1dea9f37a3186ff0ea73530b24410323';
+  const API_KEY = '1dea9f37a3186ff0ea73530b24410323';  // OpenWeather API key
 
   const sampleRouteData = {
     route_summary: {
@@ -43,8 +43,42 @@ const SummaryPage = () => {
 
   // Use real route data if available, otherwise use the sample data
   //const routeData = sampleRouteData;
-  
+  // Function to fetch weather data for each set of coordinates
+  const fetchWeatherForCoordinates = async (lat, lon) => {
+    try {
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
+      return null;
+    }
+  };
 
+  // Fetch weather data for all coordinates in route data
+  useEffect(() => {
+    const fetchWeatherData = async () => {
+      const weatherPromises = [];
+
+      // Fetch weather for start and end coordinates of each leg
+      routeData?.legs?.forEach((leg) => {
+        weatherPromises.push(fetchWeatherForCoordinates(leg.start_coordinates.latitude, leg.start_coordinates.longitude));
+        weatherPromises.push(fetchWeatherForCoordinates(leg.end_coordinates.latitude, leg.end_coordinates.longitude));
+      });
+
+      // Fetch weather for waypoints
+      routeData?.waypoints?.forEach((waypoint) => {
+        weatherPromises.push(fetchWeatherForCoordinates(waypoint.coordinates.latitude, waypoint.coordinates.longitude));
+      });
+
+      // Wait for all weather data to be fetched
+      const weatherResults = await Promise.all(weatherPromises);
+      setWeatherData(weatherResults.filter(result => result !== null));  // Filter out failed API calls
+    };
+
+    fetchWeatherData();
+  }, [routeData, setWeatherData]);
 
   const handleBackToHome = () => {
     navigate('/home');
@@ -52,41 +86,20 @@ const SummaryPage = () => {
 
   const handleViewFullMap = async () => {
     try {
-      // Send routeData to Python backend for processing
       const response = await axios.post('http://localhost:5000/process-route-data', routeData);
       const processedRouteData = response.data;
-  
-      // Navigate to the Map page and pass in processedRouteData 
       navigate('/map', { state: { routeData: processedRouteData } });
     } catch (err) {
       setError("Failed to process route data for the map.");
       console.error("Error processing route data:", err);
     }
   };
-  
 
   const handleViewMoreStatistics = () => {
-    navigate('/detailed-report');  // Navigate to the Detailed Report page
+    navigate('/detailed-report');
   };
 
-  
-  let backgroundImage = shipImage
-  // switch (transportType) {
-  //   case 'air':
-  //     backgroundImage = airImage;
-  //     break;
-  //   case 'ship':
-  //     backgroundImage = shipImage;
-  //     break;
-  //   case 'truck':
-  //     backgroundImage = truckImage;
-  //     break;
-  //   case 'train':
-  //     backgroundImage = trainImage;
-  //     break;
-  //   default:
-  //     backgroundImage = shipImage; // If no transportType is provided
-  // }
+  let backgroundImage = shipImage;
 
   return (
     <div className="summary-page">
@@ -104,17 +117,30 @@ const SummaryPage = () => {
             height: '100vh',  // Full viewport height
           }}
         >
-        
         </div>
 
         {/* Right Section - Summary Data */}
         <div className="right-section">
           <h2>Results</h2>
           <div className="activity-timeline">
-            <p><strong>ETA:</strong> 2 hours</p>
-            <p><strong>Distance:</strong> 150 km</p>
-            <p><strong>Cost:</strong> $500</p>
+            <p><strong>Total Distance:</strong> {routeData?.route_summary?.total_distance_km || 0} km</p>
+            <p><strong>Estimated Duration:</strong> {routeData?.route_summary?.estimated_duration_hours || 0} hours</p>
+            <p><strong>Total Cost:</strong> ${routeData?.route_summary?.total_cost_usd || 0}</p>
           </div>
+
+          <h2>Weather Information</h2>
+          {weatherData.length > 0 ? (
+            weatherData.map((weather, index) => (
+              <div key={index} className="weather-info">
+                <p><strong>Location {index + 1}:</strong> {weather.name}</p>
+                <p><strong>Temperature:</strong> {weather.main.temp}°C</p>
+                <p><strong>Condition:</strong> {weather.weather[0].description}</p>
+                <p><strong>Wind Speed:</strong> {weather.wind.speed} m/s</p>
+              </div>
+            ))
+          ) : (
+            <p>Loading weather data...</p>
+          )}
 
           {/* Error message */}
           {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -132,7 +158,7 @@ const SummaryPage = () => {
           <button 
             className="btn"
             onClick={handleViewMoreStatistics}
-            style={{ backgroundColor: "#ffd700", color: "#000" }}  // Custom color for this button
+            style={{ backgroundColor: "#ffd700", color: "#000" }}
           >
             View More Statistics
           </button>
@@ -152,3 +178,4 @@ const SummaryPage = () => {
 };
 
 export default SummaryPage;
+
