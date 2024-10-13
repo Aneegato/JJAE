@@ -10,9 +10,10 @@ import axios from 'axios';
 const SummaryPage = () => {
   const navigate = useNavigate();  
   const { state } = useLocation();
-  // const { routeData } = state || {};
+  // const { routeData } = state || {}; // Assuming routeData comes from props or navigation state
   const [error, setError] = useState("");
   const [weatherData, setWeatherData] = useState([]);
+  const [hasFetchedWeather, setHasFetchedWeather] = useState(false); // New state to track if weather data has been fetched
 
   const API_KEY = '1dea9f37a3186ff0ea73530b24410323';  // OpenWeather API key
 
@@ -59,6 +60,8 @@ const SummaryPage = () => {
   // Fetch weather data for all coordinates in route data
   useEffect(() => {
     const fetchWeatherData = async () => {
+      if (hasFetchedWeather) return; // Prevent re-fetching if already done
+
       const weatherPromises = [];
       const seenCoordinates = new Set();  // To track unique coordinates
 
@@ -109,13 +112,14 @@ const SummaryPage = () => {
       // Wait for all weather data to be fetched
       const weatherResults = await Promise.all(weatherPromises);
       setWeatherData(weatherResults.filter(result => result !== null));  // Filter out failed API calls
+      setHasFetchedWeather(true); // Mark as fetched
 
       // Log weather information for debugging
       console.log("Fetched Weather Data:", weatherResults);
     };
 
     fetchWeatherData();
-  }, [routeData]);
+  }, [routeData, hasFetchedWeather, setWeatherData]);
 
   const handleBackToHome = () => {
     navigate('/home');
@@ -133,7 +137,7 @@ const SummaryPage = () => {
   };
 
   const handleViewMoreStatistics = () => {
-    navigate('/detailed-report', { state: { routeData } }); // Pass routeData to the detailed report
+    navigate('/detailed-report', { state: { routeData: routeData} }); // Pass routeData to the detailed report
   };
 
   const riskScoreValue = 70; // Risk score value for illustration
