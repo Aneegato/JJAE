@@ -10,7 +10,7 @@ import axios from 'axios';
 const SummaryPage = () => {
   const navigate = useNavigate();  
   const { state } = useLocation();
-  const { routeData } = state || {};
+  // const { routeData } = state || {};
   const [error, setError] = useState("");
   const [weatherData, setWeatherData] = useState([]);
 
@@ -41,7 +41,7 @@ const SummaryPage = () => {
     ]
   };
 
-  // const routeData = sampleRouteData;
+  const routeData = sampleRouteData;
 
   // Function to fetch weather data for each set of coordinates
   const fetchWeatherForCoordinates = async (lat, lon) => {
