@@ -5,14 +5,24 @@ body, h1, h2, p {
 
 .dashboard-page {
     background: linear-gradient(180deg, #001f3f, #003366, #005f99, #669FAC);
-    color: #ffffff;  /* White text */
+    color: #ffffff;  
     padding: 20px;
     height: 100vh; 
   }
+
+
+.dashboard-page h1 {
+  font-size: 3rem; 
+  font-weight: bold; 
+  color: #ffffff; 
+  text-align: center; 
+  margin-bottom: 20px; 
+  letter-spacing: 1.5px; 
+}
   
   .dashboard-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);  /* 3 columns for the top section */
+    grid-template-columns: repeat(2, 1fr);  
     gap: 20px;
   }
   
@@ -26,7 +36,13 @@ body, h1, h2, p {
   }
   
   .dashboard-box h2 {
-    color: #ffffff;  /* White text for headings */
+    color: #ffffff; 
+    padding: 10px;
+    font-weight: bold; 
+  }
+
+  .dashboard-box-bottom-right {
+    grid-column: 2;
   }
   
   .chart-container {
@@ -34,6 +50,14 @@ body, h1, h2, p {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
+  }
+
+  .pie-chart-container {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    width: 100%; 
   }
   
   .chart {

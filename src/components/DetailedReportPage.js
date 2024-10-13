@@ -31,8 +31,9 @@ const sampleRouteData = {
       transport_mode: "train",
       distance_km: 200,
       duration_hours: 3,
-      cost_usd: 700,
-    }
+      cost_usd: 900,
+    },
+    
   ]
 };
 
@@ -88,6 +89,14 @@ const DashboardPage = () => {
     total_duration: leg.duration_hours
   }));
 
+  const costPerKmData = legs.map((leg) => ({
+    transport: leg.transport_mode,
+    cost_per_km: (leg.cost_usd / leg.distance_km).toFixed(2), // Calculate cost per kilometer
+  }));
+
+  const maxCostPerKm = Math.max(...costPerKmData.map((d) => parseFloat(d.cost_per_km)));
+
+
   const handleBackToSummary = () => {
     navigate('/summary');
   };
@@ -120,9 +129,9 @@ const DashboardPage = () => {
 
         {/* Distance Breakdown (Pie Chart) */}
         <div className="dashboard-box-outer">
-          <div className="dashboard-box">
+          <div className="dashboard-box pie-chart-container">
             <h2>Distance Breakdown by Transport</h2>
-            <PieChart width={500} height={300}>
+            <PieChart width={600} height={300}>
               <Pie
                 data={distanceData}
                 dataKey="distance"
@@ -143,6 +152,9 @@ const DashboardPage = () => {
                 ))}
               </Pie>
               <Legend 
+              layout="horizontal" 
+              align="center" 
+              verticalAlign="bottom"
               iconType="plainline" 
               formatter={(value) => (
               <span style={{ color: "#ffffff" }}> {/* Ensuring the label color is white */}
@@ -172,7 +184,33 @@ const DashboardPage = () => {
           </div>
         </div>
 
-      </div>
+     
+      {/* Cost per Kilometer Breakdown (new graph) */}
+<div className="dashboard-box-outer dashboard-box-bottom-right">
+  <div className="dashboard-box">
+    <h2>Cost per Kilometer by Transport</h2>
+    <BarChart width={600} height={300} data={costPerKmData} layout="vertical" margin={{ top: 10, right: 50, left: 10, bottom: 10 }}>
+      <CartesianGrid strokeDasharray="3 3" stroke="#333333" />
+      <XAxis 
+  dataKey="cost_per_km" 
+  type="number" 
+  stroke="#ffffff" 
+  domain={[0, maxCostPerKm * 1.5]} // Extending the range by 1.5 times
+  tickFormatter={(value) => Math.round(value)}
+  ticks={Array.from({ length: Math.ceil((maxCostPerKm * 1.5) / 1) + 1 }, (_, i) => i)} 
+/>  
+      <YAxis dataKey="transport" type="category" stroke="#ffffff" tickFormatter={(value) => value.charAt(0).toUpperCase() + value.slice(1)} />
+      <Bar dataKey="cost_per_km" fill="#8884d8">
+        {costPerKmData.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={index === 0 ? "#001f3f" : "#66b2ff"} />
+        ))}
+        <LabelList dataKey="cost_per_km" content={<CustomLabel />} />
+      </Bar>
+    </BarChart>
+  </div>
+</div>
+
+</div> 
 
       {/* Back to Summary button */}
       <button onClick={handleBackToSummary} className="back-button">
