@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; 
-import '../styles/SummaryPage.css';  
-import airImage from '../assets/plane_transportation.jpeg';
-import shipImage from '../assets/boat.jpeg';
-import truckImage from '../assets/truck.jpeg';
-import trainImage from '../assets/train_transportation.jpeg';  
+import '../styles/SummaryPage.css';   
 import axios from 'axios';
+import { calculateRisk } from '../services/riskCalculation';
 
 const SummaryPage = () => {
   const navigate = useNavigate();  
   const { state } = useLocation();
-  // const { routeData } = state || {}; // Assuming routeData comes from props or navigation state
+  const { routeData } = state || {}; // Assuming routeData comes from props or navigation state
   const [error, setError] = useState("");
   const [weatherData, setWeatherData] = useState([]);
   const [hasFetchedWeather, setHasFetchedWeather] = useState(false); // New state to track if weather data has been fetched
+  const [riskData, setRiskData] = useState(null);
 
   const API_KEY = '1dea9f37a3186ff0ea73530b24410323';  // OpenWeather API key
 
@@ -42,7 +40,7 @@ const SummaryPage = () => {
     ]
   };
 
-  const routeData = sampleRouteData;
+  //const routeData = sampleRouteData;
 
   // Function to fetch weather data for each set of coordinates
   const fetchWeatherForCoordinates = async (lat, lon) => {
@@ -121,6 +119,29 @@ const SummaryPage = () => {
     fetchWeatherData();
   }, [routeData, hasFetchedWeather, setWeatherData]);
 
+  useEffect(() => {
+    const fetchRiskData = async () => {
+      if (routeData && weatherData.length > 0 && !riskData) {  // CHANGED: Avoid multiple calls by checking for riskData
+        try {
+          const riskResponse = await calculateRisk(routeData, weatherData);
+
+          // CHANGED: Extract the JSON portion from the OpenAI response
+          const jsonStartIndex = riskResponse.findIndex((item) => item.startsWith('{'));
+          const jsonString = riskResponse.slice(jsonStartIndex).join('');  // Join lines to get the full JSON string
+
+          const parsedRiskData = JSON.parse(jsonString);  // Parse the JSON string
+
+          setRiskData(parsedRiskData);  // Store parsed risk data
+        } catch (err) {
+          setError("Failed to calculate the risk.");
+          console.error(err);
+        }
+      }
+    };
+
+    fetchRiskData();
+  }, [routeData, weatherData, riskData]);
+
   const handleBackToHome = () => {
     navigate('/home');
   };
@@ -140,8 +161,6 @@ const SummaryPage = () => {
     navigate('/detailed-report', { state: { routeData: routeData} }); // Pass routeData to the detailed report
   };
 
-  const riskScoreValue = 70; // Risk score value for illustration
-
   const getRiskScoreColorClass = (value) => {
     if (value <= 30) {
       return "text-green-600";  // Green for values <= 30
@@ -157,18 +176,39 @@ const SummaryPage = () => {
       {/* Risk Score Section */}
       <div className="risk-score-container">
         <h2 className="risk-score-title">Risk Score</h2>
-        <div
-          className={`radial-progress ${getRiskScoreColorClass(riskScoreValue)}`}
-          style={{
-            "--value": riskScoreValue,
-            "--size": "25rem",
-            "--thickness": "1.7rem",
-          }}
-          role="progressbar"
-        >
-          <span className="risk-score-value">{riskScoreValue}</span>
-        </div>
+        {riskData ? (
+          <div className={`radial-progress ${getRiskScoreColorClass(riskData.overall_risk)}`}
+            style={{
+              "--value": riskData.overall_risk,
+              "--size": "25rem",
+              "--thickness": "1.7rem",
+            }}
+            role="progressbar"
+          >
+            <span className="risk-score-value">{riskData.overall_risk}</span>
+          </div>
+        ) : (
+          <p>Loading risk data...</p>  
+        )}
       </div>
+
+      {/* Risk Breakdown Section */}
+      {riskData && riskData.factors ? (  
+        <div className="risk-breakdown">
+          <h3>Risk Breakdown</h3>
+          <p>Geopolitical Stability: {riskData.factors.geopolitical_stability || 'N/A'} / 100</p>  
+          <p>Weather Conditions: {riskData.factors.weather_conditions || 'N/A'} / 100</p>  
+          <p>Piracy Threats: {riskData.factors.piracy_threats || 'N/A'} / 100</p>  
+          <p>Port Congestion: {riskData.factors.port_congestion || 'N/A'} / 100</p>  
+          <p>Port Handling Quality: {riskData.factors.port_handling_quality || 'N/A'} / 100</p>  
+          <p>Customs Regulations: {riskData.factors.customs_regulations || 'N/A'} / 100</p>  
+          <p>Trade Restrictions: {riskData.factors.trade_restrictions || 'N/A'} / 100</p>  
+          <p>Carrier Reliability: {riskData.factors.carrier_reliability || 'N/A'} / 100</p>  
+          <p>Labor Strikes: {riskData.factors.labor_strikes || 'N/A'} / 100</p>  
+        </div>
+      ) : (
+        <p>Loading risk factors...</p> 
+      )}
 
       {/* Weather Information Section */}
       <div className="weather-container">
