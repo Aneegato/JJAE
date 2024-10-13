@@ -7,7 +7,7 @@ import { calculateRisk } from '../services/riskCalculation';
 const SummaryPage = () => {
   const navigate = useNavigate();  
   const { state } = useLocation();
-  const { routeData } = state || {}; // uncomment to use real data **
+  const { routeData } = state || {}; // Assuming routeData comes from props or navigation state
   const [error, setError] = useState("");
   const [weatherData, setWeatherData] = useState([]);
   const [hasFetchedWeather, setHasFetchedWeather] = useState(false); // New state to track if weather data has been fetched
@@ -40,7 +40,7 @@ const SummaryPage = () => {
     ]
   };
 
-  //const routeData = sampleRouteData; //uncomment to use sample data **
+  //const routeData = sampleRouteData;
 
   // Function to fetch weather data for each set of coordinates
   const fetchWeatherForCoordinates = async (lat, lon) => {
@@ -76,7 +76,7 @@ const SummaryPage = () => {
       routeData?.legs?.forEach((leg) => {
         const legStartKey = getCoordKey(leg.start_coordinates.latitude, leg.start_coordinates.longitude);
         const legEndKey = getCoordKey(leg.end_coordinates.latitude, leg.end_coordinates.longitude);
-        
+
         // Avoid duplicates and add leg start and end points
         if (!seenCoordinates.has(legStartKey)) {
           seenCoordinates.add(legStartKey);
@@ -171,33 +171,41 @@ const SummaryPage = () => {
     }
   };
 
-  const riskScoreValue = riskData.overall_risk; //uncomment this to use real data **
-  //const riskScoreValue = 80; //uncomment this to use sample data **
-
   return (
     <div className="summary-container">
       {/* Risk Score Section */}
-  <div className="risk-score-container">
-    <h2 className="risk-score-title">Risk Score</h2>
-    <div
-      className={`radial-progress ${getRiskScoreColorClass(riskScoreValue)}`}
-      style={{
-        "--value": riskScoreValue,
-        "--size": "23rem",
-        "--thickness": "1.7rem",
-      }}
-      role="progressbar"
-    >
-      <span className="risk-score-value">{riskScoreValue}</span>
-    </div>
-    <p className={`risk-score-description ${getRiskScoreColorClass(riskScoreValue)}`}>
-      {riskScoreValue <= 30
-        ? "Safe to transport. Go ahead."
-        : riskScoreValue <= 65
-        ? "May be risky. Proceed with caution."
-        : "Transport risk level is high. Recommend to halt transport."}
-    </p>
-  </div>
+<div className="risk-score-container">
+  <h2 className="risk-score-title">Risk Score</h2>
+  {riskData ? (
+    <>
+      <div
+        className={`radial-progress ${getRiskScoreColorClass(riskData.overall_risk)}`}
+        style={{
+          "--value": riskData.overall_risk,
+          "--size": "25rem",
+          "--thickness": "1.7rem",
+        }}
+        role="progressbar"
+      >
+        <span className="risk-score-value">{riskData.overall_risk}</span>
+      </div>
+      <p
+        className={`risk-score-description ${getRiskScoreColorClass(
+          riskData.overall_risk
+        )}`}
+      >
+        {riskData.overall_risk <= 30
+          ? "Safe to transport. Go ahead."
+          : riskData.overall_risk <= 65
+          ? "May be risky. Proceed with caution."
+          : "Transport risk level is high. Recommend to halt transport."}
+      </p>
+    </>
+  ) : (
+    <p>Loading risk data...</p>
+  )}
+</div>
+
 
       {/* Weather Information Section */}
       <div className="weather-container">

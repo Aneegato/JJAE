@@ -9,7 +9,6 @@ import { generateRoute } from '../services/routeOptimization.js'
 const HomePage = () => {
   const [startDestination, setStartDestination] = useState('');
   const [endDestination, setEndDestination] = useState('');
-  const [budget, setBudget] = useState('');
   const [loading, setLoading] = useState(false);  
   const [error, setError] = useState('');
   
@@ -57,16 +56,6 @@ const HomePage = () => {
             placeholder="Enter your end destination"
             value={endDestination}  // Bind input to state
             onChange={(e) => setEndDestination(e.target.value)} 
-          />
-        </div>
-
-        {/* Input field for the monetary budget */}
-        <div className="input-field">
-          <input
-            type="text"
-            placeholder="Monetary Budget"
-            value={budget}  
-            onChange={(e) => setBudget(e.target.value)} 
           />
         </div>
 
