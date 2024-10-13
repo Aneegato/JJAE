@@ -140,7 +140,7 @@ const SummaryPage = () => {
     navigate('/detailed-report', { state: { routeData: routeData} }); // Pass routeData to the detailed report
   };
 
-  const riskScoreValue = 70; // Risk score value for illustration
+  const riskScoreValue = 80; // Risk score value for illustration
 
   const getRiskScoreColorClass = (value) => {
     if (value <= 30) {
@@ -155,20 +155,27 @@ const SummaryPage = () => {
   return (
     <div className="summary-container">
       {/* Risk Score Section */}
-      <div className="risk-score-container">
-        <h2 className="risk-score-title">Risk Score</h2>
-        <div
-          className={`radial-progress ${getRiskScoreColorClass(riskScoreValue)}`}
-          style={{
-            "--value": riskScoreValue,
-            "--size": "25rem",
-            "--thickness": "1.7rem",
-          }}
-          role="progressbar"
-        >
-          <span className="risk-score-value">{riskScoreValue}</span>
-        </div>
-      </div>
+  <div className="risk-score-container">
+    <h2 className="risk-score-title">Risk Score</h2>
+    <div
+      className={`radial-progress ${getRiskScoreColorClass(riskScoreValue)}`}
+      style={{
+        "--value": riskScoreValue,
+        "--size": "23rem",
+        "--thickness": "1.7rem",
+      }}
+      role="progressbar"
+    >
+      <span className="risk-score-value">{riskScoreValue}</span>
+    </div>
+    <p className={`risk-score-description ${getRiskScoreColorClass(riskScoreValue)}`}>
+      {riskScoreValue <= 30
+        ? "Safe to transport. Go ahead."
+        : riskScoreValue <= 65
+        ? "May be risky. Proceed with caution."
+        : "Transport risk level is high. Recommend to halt transport."}
+    </p>
+  </div>
 
       {/* Weather Information Section */}
       <div className="weather-container">
