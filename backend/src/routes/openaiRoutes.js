@@ -28,4 +28,23 @@ router.post("/generate-route", async (req, res) => {
   }
 });
 
+router.post("/risk-calculation", async (req, res) => {
+  const { prompt } = req.body; 
+  try {
+    const chatCompletion = await openai.chat.completions.create({
+      model: "gpt-4", 
+      messages: [
+        { role: "user", content: prompt } 
+      ],
+    });
+
+    const riskAssessment = chatCompletion.choices.map((choice) => choice.message.content.trim());
+    console.log(riskAssessment);
+    res.status(200).json({ risk: riskAssessment });
+  } catch (error) {
+    console.error("Error generating routes:", error);
+    res.status(500).json({ error: "Failed to generate route." });
+  }
+});
+
 module.exports = router;
