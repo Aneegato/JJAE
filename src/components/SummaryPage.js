@@ -140,7 +140,7 @@ const SummaryPage = () => {
     navigate('/detailed-report', { state: { routeData: routeData} }); // Pass routeData to the detailed report
   };
 
-  const riskScoreValue = 80; // Risk score value for illustration
+  const riskScoreValue = 30; // Risk score value for illustration
 
   const getRiskScoreColorClass = (value) => {
     if (value <= 30) {

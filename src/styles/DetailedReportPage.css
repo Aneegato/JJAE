@@ -7,7 +7,7 @@ body, h1, h2, p {
     background: linear-gradient(180deg, #001f3f, #003366, #005f99, #669FAC);
     color: #ffffff;  
     padding: 20px;
-    height: 100vh; 
+    min-height: 100%;
   }
 
 
@@ -104,9 +104,11 @@ body, h1, h2, p {
     background-color: #007bff;
     border: none;
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 10px 30px;
     color: white;
     cursor: pointer;
+    margin-top: 20px;
+    font-weight: bold;
   }
   
   button:hover {
