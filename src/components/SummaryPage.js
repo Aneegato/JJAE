@@ -192,24 +192,6 @@ const SummaryPage = () => {
         )}
       </div>
 
-      {/* Risk Breakdown Section */}
-      {riskData && riskData.factors ? (  
-        <div className="risk-breakdown">
-          <h3>Risk Breakdown</h3>
-          <p>Geopolitical Stability: {riskData.factors.geopolitical_stability || 'N/A'} / 100</p>  
-          <p>Weather Conditions: {riskData.factors.weather_conditions || 'N/A'} / 100</p>  
-          <p>Piracy Threats: {riskData.factors.piracy_threats || 'N/A'} / 100</p>  
-          <p>Port Congestion: {riskData.factors.port_congestion || 'N/A'} / 100</p>  
-          <p>Port Handling Quality: {riskData.factors.port_handling_quality || 'N/A'} / 100</p>  
-          <p>Customs Regulations: {riskData.factors.customs_regulations || 'N/A'} / 100</p>  
-          <p>Trade Restrictions: {riskData.factors.trade_restrictions || 'N/A'} / 100</p>  
-          <p>Carrier Reliability: {riskData.factors.carrier_reliability || 'N/A'} / 100</p>  
-          <p>Labor Strikes: {riskData.factors.labor_strikes || 'N/A'} / 100</p>  
-        </div>
-      ) : (
-        <p>Loading risk factors...</p> 
-      )}
-
       {/* Weather Information Section */}
       <div className="weather-container">
         <h2 className="weather-title">Weather Information</h2>
