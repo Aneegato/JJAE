@@ -43,6 +43,7 @@ const SummaryPage = () => {
 
   // Use real route data if available, otherwise use the sample data
   //const routeData = sampleRouteData;
+
   // Function to fetch weather data for each set of coordinates
   const fetchWeatherForCoordinates = async (lat, lon) => {
     try {
@@ -99,83 +100,80 @@ const SummaryPage = () => {
     navigate('/detailed-report');
   };
 
-  let backgroundImage = shipImage;
+  const riskScoreValue = 50; //risk score number
+
+  const getRiskScoreColorClass = (value) => {
+    if (value <= 30) {
+      return "text-green-600"; // Green for values 30 and below
+    } else if (value <= 65) {
+      return "text-yellow-600"; // Yellow for values between 31 and 65
+    } else {
+      return "text-red-600"; // Red for values above 65
+    }
+  };
 
   return (
-    <div className="summary-page">
-      <h1>Calculation Summary</h1>
-
-      <div className="summary-container">
-        {/* Left Section - Dynamic background image */}
-        <div 
-          className="left-section"
+    <div className="summary-container">
+      {/* Risk Score Section */}
+      <div className="risk-score-container">
+        <h2 className="risk-score-title">Risk Score</h2>
+        <div
+          className={`radial-progress ${getRiskScoreColorClass(riskScoreValue)}`}
           style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            height: '100vh',  // Full viewport height
+            "--value": riskScoreValue,
+            "--size": "25rem",
+            "--thickness": "1.7rem",
           }}
+          role="progressbar"
         >
+          <span className="risk-score-value">{riskScoreValue}</span>
         </div>
+      </div>
 
-        {/* Right Section - Summary Data */}
-        <div className="right-section">
-          <h2>Results</h2>
-          <div className="activity-timeline">
-            <p><strong>Total Distance:</strong> {routeData?.route_summary?.total_distance_km || 0} km</p>
-            <p><strong>Estimated Duration:</strong> {routeData?.route_summary?.estimated_duration_hours || 0} hours</p>
-            <p><strong>Total Cost:</strong> ${routeData?.route_summary?.total_cost_usd || 0}</p>
-          </div>
-
-          <h2>Weather Information</h2>
-          {weatherData.length > 0 ? (
+      {/* Weather Information Section */}
+      <div className="weather-container">
+        <h2 className="weather-title">Weather Information</h2>
+        {weatherData.length > 0 ? (
             weatherData.map((weather, index) => (
-              <div key={index} className="weather-info">
+              <div key={index} className="weather-location">
                 <p><strong>Location {index + 1}:</strong> {weather.name}</p>
                 <p><strong>Temperature:</strong> {weather.main.temp}°C</p>
                 <p><strong>Condition:</strong> {weather.weather[0].description}</p>
                 <p><strong>Wind Speed:</strong> {weather.wind.speed} m/s</p>
+                <p>----------------</p>
               </div>
             ))
           ) : (
             <p>Loading weather data...</p>
           )}
+      </div>
 
-          {/* Error message */}
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-
-          {/* DaisyUI Button for View Full Map */}
-          <button 
-            className="btn"
-            onClick={handleViewFullMap}
-            style={{ backgroundColor: "#1C8849", color: "#fff" }}
-          >
-            View Full Map
-          </button>
-
-          {/* DaisyUI Button for View More Statistics */}
-          <button 
-            className="btn"
-            onClick={handleViewMoreStatistics}
-            style={{ backgroundColor: "#ffd700", color: "#000" }}
-          >
-            View More Statistics
-          </button>
-
-          {/* DaisyUI Button for Back to Home */}
-          <button 
-            className="btn"
-            onClick={handleBackToHome}
-            style={{ backgroundColor: "#faeede", color: "#000" }}
-          >
-            Back to Home
-          </button>
+      {/* Updated Stats Section with DaisyUI Component */}
+      <div className="stats shadow">
+        <div className="stat">
+          <div className="stat-title">Total Distance</div>
+          <div className="stat-value">150 km</div>
         </div>
+
+        <div className="stat">
+          <div className="stat-title">Estimated Duration</div>
+          <div className="stat-value">2 hours</div>
+        </div>
+
+        <div className="stat">
+          <div className="stat-title">Total Cost</div>
+          <div className="stat-value">$500</div>
+        </div>
+      </div>
+
+      {/* Buttons Section */}
+      <div className="buttons-container">
+        <button className="btn btn-success" onClick={handleViewFullMap}>View Full Map</button>
+        <button className="btn btn-warning" onClick={handleViewMoreStatistics}>View More Statistics</button>
+        <button className="btn btn" onClick={handleBackToHome}>Back to Home</button>
       </div>
     </div>
   );
 };
 
 export default SummaryPage;
-

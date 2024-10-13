@@ -1,66 +1,99 @@
-.summary-page {
-  padding: 0;
-  margin: 0;
-  background: linear-gradient(180deg, rgb(15, 30, 50), rgb(30, 45, 58), rgb(45, 65, 80), rgb(123, 146, 141), rgb(159, 192, 186));
-  height: 100vh;
-}
-
 .summary-container {
-  display: flex;
+  position: relative;
   height: 100vh;
-}
-
-.left-section {
-  flex: 1;
-  margin: 0;
-  height: 100%;
-}
-
-.right-section {
-  flex: 1;
-  padding: 20px;
+  background: url('../assets/boat.jpeg') no-repeat center center;
+  background-size: cover;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 20px; /* Add gap between the stats and the buttons */
+  justify-content: space-between;
 }
 
-.stats {
-  margin-bottom: 20px; /* Add space below the stats component */
-}
-
-.results-grid {
-  display: flex;
-  flex-direction: column;  /* Stack items vertically */
-  gap: 20px;  /* Add space between each result box */
-  margin-bottom: 30px;
-}
-
-.info-box {
-  background: linear-gradient(90deg, #7ba292, #5d8cae);
+.risk-score-container {
+  position: absolute;
+  top: 1rem;
+  left: 5rem;
+  background: rgba(255, 255, 255, 0.5); 
+  width: 45rem;
+  padding: 2rem;
   border-radius: 8px;
-  padding: 20px;
   text-align: center;
-  font-size: 1.2rem;
-  color: #fff;
+}
+
+.risk-score-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
   font-weight: bold;
 }
 
+.risk-score-value {
+  font-size: 6rem; 
+  font-weight: bold; 
+}
+
+.radial-progress {
+  margin: 0 auto;
+}
+
+.weather-container {
+  position: absolute;
+  top: 2rem;
+  right: 3.5rem;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 1.2rem;
+}
+
+.weather-title {
+  font-size: 1.7rem;
+  font-weight: bold;
+}
+
+.stats {
+  display: flex;
+  justify-content: start;
+  gap: 2rem;
+  position: absolute;
+  bottom: 4rem;
+  left: 5rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat {
+  padding: 1rem;
+}
+
+.stat-title {
+  font-size: 1.5rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1a73e8; /* Example color */
+}
+
 .buttons-container {
+  position: absolute;
+  bottom: 3.5rem;
+  right: 3rem;
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Add space between buttons */
-  margin-top: 30px;  /* Add some space between results and buttons */
+  gap: 1rem;
 }
 
 button {
-  padding: 15px 20px; /* Increase padding for more space inside the buttons */
-  margin-bottom: 10px; /* Add space between each button */
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.9;
+  width: 500px;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
