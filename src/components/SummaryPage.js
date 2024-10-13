@@ -10,7 +10,7 @@ import axios from 'axios';
 const SummaryPage = () => {
   const navigate = useNavigate();  
   const { state } = useLocation();
-  // const { routeData } = state || {}; // Assuming routeData comes from props or navigation state
+  const { routeData } = state || {}; // Assuming routeData comes from props or navigation state
   const [error, setError] = useState("");
   const [weatherData, setWeatherData] = useState([]);
   const [hasFetchedWeather, setHasFetchedWeather] = useState(false); // New state to track if weather data has been fetched
@@ -42,7 +42,7 @@ const SummaryPage = () => {
     ]
   };
 
-  const routeData = sampleRouteData;
+  //const routeData = sampleRouteData;
 
   // Function to fetch weather data for each set of coordinates
   const fetchWeatherForCoordinates = async (lat, lon) => {
