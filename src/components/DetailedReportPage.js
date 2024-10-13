@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, Legend, CartesianGrid, LabelList } from 'recharts';
 import '../styles/DetailedReportPage.css';  
 import { useNavigate } from 'react-router-dom';
@@ -66,13 +67,13 @@ const CustomLabel = ({ x, y, width, height, value }) => (
 
 const DashboardPage = () => {
   const navigate = useNavigate();  
+  const { state } = useLocation();
+  const { routeData } = state || {}; //comment/uncomment this to use sample or real data
+  const legs = routeData?.legs || [];
 
   // Comment/uncomment based on whether you want to use sample data or real data
-  const routeData = sampleRouteData; // using sample data for now
+  //const routeData = sampleRouteData; // using sample data for now
 
-  const legs = routeData.legs;
-
-  
 
   const costData = legs.map((leg) => ({
     transport: leg.transport_mode,

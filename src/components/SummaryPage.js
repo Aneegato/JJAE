@@ -97,10 +97,11 @@ const SummaryPage = () => {
   };
 
   const handleViewMoreStatistics = () => {
-    navigate('/detailed-report');
+    navigate('/detailed-report', { state: { routeData } }); //** new change to update **
   };
+  
 
-  const riskScoreValue = 50; //risk score number
+  const riskScoreValue = 30; //risk score number
 
   const getRiskScoreColorClass = (value) => {
     if (value <= 30) {

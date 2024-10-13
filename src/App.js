@@ -38,9 +38,7 @@ function App() {
             } />
             
             {/* Pass routeData and weatherData to DetailedReportPage */}
-            <Route path="/detailed-report" element={
-              <DetailedReportPage routeData={routeData} weatherData={weatherData} />
-            } />
+            <Route path="/detailed-report" element={<DetailedReportPage />} /> 
           </Routes>
         </Suspense>
       </div>
