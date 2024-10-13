@@ -41,8 +41,7 @@ const SummaryPage = () => {
     ]
   };
 
-  // Use real route data if available, otherwise use the sample data
-  //const routeData = sampleRouteData;
+  // const routeData = sampleRouteData;
 
   // Function to fetch weather data for each set of coordinates
   const fetchWeatherForCoordinates = async (lat, lon) => {
@@ -61,25 +60,62 @@ const SummaryPage = () => {
   useEffect(() => {
     const fetchWeatherData = async () => {
       const weatherPromises = [];
+      const seenCoordinates = new Set();  // To track unique coordinates
 
-      // Fetch weather for start and end coordinates of each leg
+      const getCoordKey = (lat, lon) => `${lat},${lon}`;  // Helper function to create a unique key for lat/lon
+
+      // Add start point to the beginning
+      if (routeData?.legs?.length > 0) {
+        const startLeg = routeData.legs[0];
+        weatherPromises.push(fetchWeatherForCoordinates(startLeg.start_coordinates.latitude, startLeg.start_coordinates.longitude));
+        seenCoordinates.add(getCoordKey(startLeg.start_coordinates.latitude, startLeg.start_coordinates.longitude));
+      }
+
+      // Process legs of the trip
       routeData?.legs?.forEach((leg) => {
-        weatherPromises.push(fetchWeatherForCoordinates(leg.start_coordinates.latitude, leg.start_coordinates.longitude));
-        weatherPromises.push(fetchWeatherForCoordinates(leg.end_coordinates.latitude, leg.end_coordinates.longitude));
+        const legStartKey = getCoordKey(leg.start_coordinates.latitude, leg.start_coordinates.longitude);
+        const legEndKey = getCoordKey(leg.end_coordinates.latitude, leg.end_coordinates.longitude);
+        
+        // Avoid duplicates and add leg start and end points
+        if (!seenCoordinates.has(legStartKey)) {
+          seenCoordinates.add(legStartKey);
+          weatherPromises.push(fetchWeatherForCoordinates(leg.start_coordinates.latitude, leg.start_coordinates.longitude));
+        }
+
+        if (!seenCoordinates.has(legEndKey)) {
+          seenCoordinates.add(legEndKey);
+          weatherPromises.push(fetchWeatherForCoordinates(leg.end_coordinates.latitude, leg.end_coordinates.longitude));
+        }
       });
 
-      // Fetch weather for waypoints
+      // Process waypoints
       routeData?.waypoints?.forEach((waypoint) => {
-        weatherPromises.push(fetchWeatherForCoordinates(waypoint.coordinates.latitude, waypoint.coordinates.longitude));
+        const waypointKey = getCoordKey(waypoint.coordinates.latitude, waypoint.coordinates.longitude);
+        if (!seenCoordinates.has(waypointKey)) {
+          seenCoordinates.add(waypointKey);
+          weatherPromises.push(fetchWeatherForCoordinates(waypoint.coordinates.latitude, waypoint.coordinates.longitude));
+        }
       });
+
+      // Add the end point of the last leg as the final location
+      if (routeData?.legs?.length > 0) {
+        const lastLeg = routeData.legs[routeData.legs.length - 1];
+        const endCoordKey = getCoordKey(lastLeg.end_coordinates.latitude, lastLeg.end_coordinates.longitude);
+        if (!seenCoordinates.has(endCoordKey)) {
+          weatherPromises.push(fetchWeatherForCoordinates(lastLeg.end_coordinates.latitude, lastLeg.end_coordinates.longitude));
+        }
+      }
 
       // Wait for all weather data to be fetched
       const weatherResults = await Promise.all(weatherPromises);
       setWeatherData(weatherResults.filter(result => result !== null));  // Filter out failed API calls
+
+      // Log weather information for debugging
+      console.log("Fetched Weather Data:", weatherResults);
     };
 
     fetchWeatherData();
-  }, [routeData, setWeatherData]);
+  }, [routeData]);
 
   const handleBackToHome = () => {
     navigate('/home');
@@ -97,19 +133,18 @@ const SummaryPage = () => {
   };
 
   const handleViewMoreStatistics = () => {
-    navigate('/detailed-report', { state: { routeData } }); //** new change to update **
+    navigate('/detailed-report', { state: { routeData } }); // Pass routeData to the detailed report
   };
-  
 
-  const riskScoreValue = 30; //risk score number
+  const riskScoreValue = 70; // Risk score value for illustration
 
   const getRiskScoreColorClass = (value) => {
     if (value <= 30) {
-      return "text-green-600"; // Green for values 30 and below
+      return "text-green-600";  // Green for values <= 30
     } else if (value <= 65) {
-      return "text-yellow-600"; // Yellow for values between 31 and 65
+      return "text-yellow-600";  // Yellow for values between 31 and 65
     } else {
-      return "text-red-600"; // Red for values above 65
+      return "text-red-600";  // Red for values above 65
     }
   };
 
