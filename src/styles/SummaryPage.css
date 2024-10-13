@@ -13,9 +13,9 @@
   position: absolute;
   top: 1rem;
   left: 5rem;
-  background: rgba(255, 255, 255, 0.5); 
+  background: rgba(255, 255, 255, 0.7); 
   width: 45rem;
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 8px;
   text-align: center;
 }
@@ -29,6 +29,11 @@
 .risk-score-value {
   font-size: 6rem; 
   font-weight: bold; 
+}
+.risk-score-description {
+  font-size: 1.3rem;
+  font-weight: bold;
+  padding: 1rem;
 }
 
 .radial-progress {
@@ -44,7 +49,10 @@
   border-radius: 12px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   font-size: 1.2rem;
+  max-height: 30rem; 
+  overflow-y: auto; 
 }
+
 
 .weather-title {
   font-size: 1.7rem;
@@ -56,7 +64,7 @@
   justify-content: start;
   gap: 2rem;
   position: absolute;
-  bottom: 4rem;
+  bottom: 3.5rem;
   left: 5rem;
   background: rgba(255, 255, 255, 0.9);
   padding: 2rem;
