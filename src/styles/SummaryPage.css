@@ -1,7 +1,7 @@
 .summary-container {
   position: relative;
   height: 100vh;
-  background: url('../assets/boat.jpeg') no-repeat center center;
+  background: url('../assets/port_ship.jpg') no-repeat center center;
   background-size: cover;
   padding: 2rem;
   display: flex;
