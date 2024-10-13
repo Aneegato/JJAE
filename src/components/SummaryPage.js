@@ -18,9 +18,9 @@ const SummaryPage = () => {
 
   const sampleRouteData = {
     route_summary: {
-      total_distance_km: 150,
-      estimated_duration_hours: 2,
-      total_cost_usd: 500,
+      total_distance_km: 25000,
+      estimated_duration_hours: 45,
+      total_cost_usd: 2000,
     },
     legs: [
       {
@@ -152,17 +152,17 @@ const SummaryPage = () => {
       <div className="stats shadow">
         <div className="stat">
           <div className="stat-title">Total Distance</div>
-          <div className="stat-value">150 km</div>
+          <div className="stat-value">{routeData?.route_summary?.total_distance_km || 0} km</div>
         </div>
 
         <div className="stat">
           <div className="stat-title">Estimated Duration</div>
-          <div className="stat-value">2 hours</div>
+          <div className="stat-value">{routeData?.route_summary?.estimated_duration_hours || 0} hours</div>
         </div>
 
         <div className="stat">
           <div className="stat-title">Total Cost</div>
-          <div className="stat-value">$500</div>
+          <div className="stat-value">{routeData?.route_summary?.total_cost_usd || 0} USD</div>
         </div>
       </div>
 
